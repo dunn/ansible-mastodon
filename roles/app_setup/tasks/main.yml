@@ -2,3 +2,4 @@
 - include: prerequisites.yml
 - include: configuration.yml
 - include: services.yml
+- include: jobs.yml
