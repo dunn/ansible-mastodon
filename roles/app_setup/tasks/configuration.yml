@@ -15,13 +15,17 @@
     group: nginx
     owner: "{{ deploy_user }}"
 
-- name: generate secrets
+- name: generate Rails secret key base
   shell: openssl rand -base64 64 | sha512sum | tr -d '\n\ -'
-  register: "{{ item }}"
-  with_items:
-    - rails_secret
-    - paperclip_secret
-    - otp_secret
+  register: rails_secret
+
+- name: generate Paperclip secret
+  shell: openssl rand -base64 64 | sha512sum | tr -d '\n\ -'
+  register: paperclip_secret
+
+- name: generate OTP secret
+  shell: openssl rand -base64 64 | sha512sum | tr -d '\n\ -'
+  register: otp_secret
 
 - name: fill in configuration variables
   lineinfile:
