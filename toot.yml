@@ -9,16 +9,11 @@
       prompt: Path to SSH public key for deploying
       private: no
 
-    - name:  deploy_user
-      default: mastodon
-      prompt: Name of deploy user
-      private: no
-
     - name: deploy_pass
       confirm: yes
       encrypt: sha512_crypt
       private: yes
-      prompt: Password for deploy user
+      prompt: Password for “mastodon” user
       salt_size: 7
 
     - name: smtp_server
@@ -40,9 +35,7 @@
       private: no
 
   vars:
-    ruby_ver: 2.3.1
-    ruby_abi: 2.3
-    ruby_sha: 4a7c5f52f205203ea0328ca8e1963a7a88cf1f7f0e246f857d595b209eac0a4d
+    deploy_user: mastodon
 
     pg_user: mastodon
     pg_db: mastodon
@@ -53,12 +46,21 @@
       - name: "{{ pg_user }}"
         db: "{{ pg_db }}"
 
+    rbenv:
+      env: user
+      default_ruby: 2.3.1
+      rubies:
+      - version: 2.3.1
+        env:
+          RUBY_CONFIGURE_OPTS: "--enable-shared"
+
   roles:
-    - { role: dunn.tz }
-    - { role: dunn.mosh }
-    - { role: dunn.acme-nginx-passenger }
-    # Run this after acme-nginx-passenger to ensure the correct Ruby is installed
-    - { role: dunn.ruby }
-    - { role: geerlingguy.postgresql }
-    - { role: app_setup }
-    - { role: dunn.security }
+    - role: dunn.tz
+    - role: dunn.mosh
+    - role: dunn.acme-nginx-passenger
+    - role: zzet.rbenv
+      rbenv_users:
+        - "{{ deploy_user }}"
+    - role: geerlingguy.postgresql
+    - role: app_setup
+    - role: dunn.security

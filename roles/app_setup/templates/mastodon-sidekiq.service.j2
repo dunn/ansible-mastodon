@@ -10,7 +10,7 @@ User=mastodon
 WorkingDirectory={{ app_dir }}/current
 Environment="RAILS_ENV=production"
 Environment="DB_POOL=5"
-ExecStart=/usr/bin/bundle exec sidekiq -c 5 -q default -q mailers -q pull -q push
+ExecStart=/home/{{ deploy_user }}/.rbenv/shims/bundle exec sidekiq -c 5 -q default -q mailers -q pull -q push
 TimeoutSec=15
 Restart=always
 
