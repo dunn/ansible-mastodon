@@ -47,7 +47,7 @@
     pg_user: mastodon
     pg_db: mastodon
 
-    postgresql_db:
+    postgresql_databases:
       - name: "{{ pg_db }}"
         login_user: "{{ pg_user }}"
     postgresql_users:
