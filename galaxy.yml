@@ -2,9 +2,6 @@
 - src: dunn.tz
   version: '1'
 
-- src: dunn.mosh
-  version: '1'
-
 - src: zzet.rbenv
   version: '3.1.1'
 

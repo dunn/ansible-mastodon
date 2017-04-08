@@ -56,7 +56,6 @@
 
   roles:
     - role: dunn.tz
-    - role: dunn.mosh
     - role: dunn.acme-nginx-passenger
     - role: zzet.rbenv
       rbenv_users:
