@@ -47,8 +47,9 @@
         db: "{{ pg_db }}"
 
     rbenv:
-      env: user
       default_ruby: 2.3.1
+      env: user
+      version: v1.1.0
       rubies:
       - version: 2.3.1
         env:
