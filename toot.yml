@@ -49,7 +49,6 @@
 
     postgresql_databases:
       - name: "{{ pg_db }}"
-        login_user: "{{ pg_user }}"
     postgresql_users:
       - name: "{{ pg_user }}"
         db: "{{ pg_db }}"
