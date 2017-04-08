@@ -9,7 +9,7 @@
   version: '2'
 
 - src: dunn.acme-nginx-passenger
-  version: '1'
+  version: '2'
 
 - src: geerlingguy.postgresql
   version: '1.0.2'
