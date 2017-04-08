@@ -27,4 +27,5 @@
     - git
     - nodejs
     - openssl-devel
+    - postgresql-devel
     - redis
