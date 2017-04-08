@@ -13,7 +13,7 @@
       confirm: yes
       encrypt: sha512_crypt
       private: yes
-      prompt: Password for “mastodon” user
+      prompt: Password for mastodon user
       salt_size: 7
 
     - name: smtp_server
