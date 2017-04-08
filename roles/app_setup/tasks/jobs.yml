@@ -1,0 +1,17 @@
+---
+# https://github.com/tootsuite/mastodon/blob/master/docs/Running-Mastodon/Production-guide.md#cronjobs
+- name: set up cron jobs
+  cron:
+    job: "{{ item.job }}"
+    name: "{{ item.name }}"
+    special_time: daily
+    user: "{{ deploy_user }}"
+  with_items:
+    - name: "media:clear"
+      job: "RAILS_ENV=production /usr/bin/bundle exec rake mastodon:media:clear"
+
+    - name: "push:refresh"
+      job: "RAILS_ENV=production /usr/bin/bundle exec rake mastodon:push:refresh"
+
+    - name: "feeds:clear"
+      job: "RAILS_ENV=production /usr/bin/bundle exec rake mastodon:feeds:clear"

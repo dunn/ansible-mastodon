@@ -1,0 +1,14 @@
+---
+- name: bundle install
+  command: bundle install
+  args:
+    chdir: "{{ app_dir }}"
+  environment:
+    RAILS_ENV: production
+
+- name: create the database tables
+  command: bundle exec rails db:setup
+  args:
+    chdir: "{{ app_dir }}"
+  environment:
+    RAILS_ENV: production

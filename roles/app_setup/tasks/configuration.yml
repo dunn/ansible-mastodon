@@ -1,0 +1,60 @@
+---
+- name: create shared directory
+  file:
+    group: nginx
+    owner: "{{ deploy_user }}"
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ app_dir }}/shared"
+
+- name: install config template
+  get_url:
+    url: https://github.com/tootsuite/mastodon/raw/master/.env.production.sample
+    dest: "{{ app_dir }}/shared/.env.production"
+    group: nginx
+    owner: "{{ deploy_user }}"
+
+- name: generate secrets
+  shell: openssl rand -base64 64 | sha512sum | tr -d '\n\ -'
+  register: "{{ item }}"
+  with_items:
+    - rails_secret
+    - paperclip_secret
+    - otp_secret
+
+- name: fill in configuration variables
+  lineinfile:
+    dest: "{{ app_dir }}/shared/.env.production"
+    group: nginx
+    line: "{{ item.line }}"
+    mode: 0600
+    owner: "{{ deploy_user }}"
+    regexp: "{{ item.regexp }}"
+  with_items:
+    - line: DB_USER={{ pg_user }}
+      regexp: "^DB_USER=postgres"
+
+    - line: LOCAL_DOMAIN={{ ansible_ssh_host }}
+      regexp: "^LOCAL_DOMAIN=example.com"
+
+    - line: SMTP_SERVER={{ smtp_server }}
+      regexp: "^SMTP_SERVER=smtp.mailgun.org"
+
+    - line: SMTP_LOGIN={{ smtp_login }}
+      regexp: "^SMTP_LOGIN="
+
+    - line: SMTP_PASSWORD={{ smtp_pass }}
+      regexp: "^SMTP_PASSWORD="
+
+    - line: SMTP_FROM_ADDRESS={{ smtp_from }}
+      regexp: "^SMTP_FROM_ADDRESS=notifications@example.com"
+
+    - line: PAPERCLIP_SECRET={{ paperclip_secret.stdout }}
+      regexp: "^PAPERCLIP_SECRET="
+
+    - line: SECRET_KEY_BASE={{ rails_secret.stdout }}
+      regexp: "^SECRET_KEY_BASE="
+
+    - line: OTP_SECRET={{ otp_secret.stdout }}
+      regexp: "^OTP_SECRET="

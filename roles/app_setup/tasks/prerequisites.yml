@@ -1,0 +1,30 @@
+---
+- name: add EPEL repo
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+- name: download NodeSource repo
+  get_url:
+    url: https://rpm.nodesource.com/pub_6.x/el/7/x86_64/nodejs-{{ node_ver }}-1nodesource.el7.centos.x86_64.rpm
+    checksum: sha256:{{ node_sha }}
+    dest: /tmp/nodejs-devel-{{ node_ver }}-1nodesource.el7.centos.x86_64.rpm
+
+- name: install NodeSource repo
+  yum:
+    name: /tmp/nodejs-devel-{{ node_ver }}-1nodesource.el7.centos.x86_64.rpm
+
+- name: update all yum packages
+  yum:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: install dependencies
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - binutils
+    - git
+    - nodejs
+    - openssl-devel
+    - redis

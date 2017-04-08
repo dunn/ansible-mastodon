@@ -1,0 +1,7 @@
+---
+deploy_user: deploy
+app_dir: /var/www
+
+# Using https://github.com/nodesource/distributions
+node_ver: 6.10.2
+node_sha: 744f95bd205000226291dceb12cefa434b84825af961df86f01576cb2ea76755

@@ -1,0 +1,18 @@
+---
+- src: dunn.tz
+  version: '1'
+
+- src: dunn.mosh
+  version: '1'
+
+- src: dunn.ruby
+  version: '2'
+
+- src: dunn.acme-nginx-passenger
+  version: '1'
+
+- src: geerlingguy.postgresql
+  version: '1.0.2'
+
+- src: dunn.security
+  version: '1'

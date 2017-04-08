@@ -1,0 +1,5 @@
+---
+- include: prerequisites.yml
+- include: configuration.yml
+- include: make_tables.yml
+- include: services.yml

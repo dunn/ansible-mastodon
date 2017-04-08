@@ -1,0 +1,18 @@
+# Based on https://github.com/tootsuite/mastodon/blob/master/docs/Running-Mastodon/Production-guide.md#systemd, copyright Eugen Rochko and released under AGPL 3.0
+
+[Unit]
+Description=mastodon-sidekiq
+After=network.target
+
+[Service]
+Type=simple
+User=mastodon
+WorkingDirectory={{ app_dir }}/current
+Environment="RAILS_ENV=production"
+Environment="DB_POOL=5"
+ExecStart=/usr/bin/bundle exec sidekiq -c 5 -q default -q mailers -q pull -q push
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

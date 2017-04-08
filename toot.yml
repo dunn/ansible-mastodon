@@ -1,0 +1,65 @@
+---
+- name: Provision a RHEL/CentOS server for Mastodon
+  remote_user: root
+  hosts: all
+
+  vars_prompt:
+    - name: keyfile
+      default: ~/.ssh/id_rsa.pub
+      prompt: Path to SSH public key for deploying
+      private: no
+
+    - name:  deploy_user
+      default: mastodon
+      prompt: Name of deploy user
+      private: no
+
+    - name: deploy_pass
+      confirm: yes
+      encrypt: sha512_crypt
+      private: yes
+      prompt: Password for deploy user
+      salt_size: 7
+
+    - name: smtp_server
+      default: smtp.sparkpostmail.com
+      prompt: SMTP server
+      private: no
+
+    - name: smtp_login
+      default: SMTP_Injection
+      prompt: SMTP server login
+      private: no
+
+    - name: smtp_pass
+      prompt: SMTP server password or API key
+      private: yes
+
+    - name: smtp_from
+      prompt: “From:” address for SMTP server
+      private: no
+
+  vars:
+    ruby_ver: 2.3.1
+    ruby_abi: 2.3
+    ruby_sha: 4a7c5f52f205203ea0328ca8e1963a7a88cf1f7f0e246f857d595b209eac0a4d
+
+    pg_user: mastodon
+    pg_db: mastodon
+
+    postgresql_db:
+      - name: "{{ pg_db }}"
+        login_user: "{{ pg_user }}"
+    postgresql_users:
+      - name: "{{ pg_user }}"
+        db: "{{ pg_db }}"
+
+  roles:
+    - { role: dunn.tz }
+    - { role: dunn.mosh }
+    - { role: dunn.acme-nginx-passenger }
+    # Run this after acme-nginx-passenger to ensure the correct Ruby is installed
+    - { role: dunn.ruby }
+    - { role: geerlingguy.postgresql }
+    - { role: app_setup }
+    - { role: dunn.security }
