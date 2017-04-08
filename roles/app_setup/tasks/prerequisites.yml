@@ -29,3 +29,9 @@
     - openssl-devel
     - postgresql-devel
     - redis
+
+- name: install yarn
+  npm:
+    global: yes
+    name: yarn
+    state: latest
