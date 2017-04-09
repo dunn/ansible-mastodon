@@ -31,7 +31,6 @@
       private: yes
 
     - name: smtp_from
-      default: hello@{{ ansible_ssh_host }}
       prompt: “From:” address for SMTP server
       private: no
 
