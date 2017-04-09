@@ -9,6 +9,7 @@
   with_items:
     - mastodon-sidekiq.service
     - mastodon-streaming.service
+    - mastodon-web.service
 
 - name: start Mastodon services
   systemd:
@@ -19,3 +20,4 @@
   with_items:
     - mastodon-sidekiq
     - mastodon-streaming
+    - mastodon-web
