@@ -36,6 +36,12 @@
     - postgresql-devel
     - redis
 
+- name:  start redis
+  systemd:
+    enabled: true
+    name: redis
+    state: started
+
 - name: install yarn
   npm:
     global: yes
