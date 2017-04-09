@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+python3 /home/{{ deploy_user }}/acme-tiny/acme_tiny.py --account-key /home/{{ deploy_user }}/acme/user.key --csr /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.csr --acme-dir {{ app_dir }}/current/public/.well-known/acme-challenge > /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt
+
+cat /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem > /etc/ssl/certs/ {{ ansible_ssh_host }}.pem

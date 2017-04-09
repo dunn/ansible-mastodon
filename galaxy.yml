@@ -5,9 +5,6 @@
 - src: zzet.rbenv
   version: '3.1.1'
 
-- src: dunn.acme-nginx-passenger
-  version: '2'
-
 - src: geerlingguy.postgresql
   version: '1.0.2'
 

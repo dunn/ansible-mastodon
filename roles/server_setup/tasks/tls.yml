@@ -1,0 +1,122 @@
+---
+# https://letsencrypt.org/how-it-works/
+# https://github.com/diafygi/acme-tiny#how-to-use-this-script
+# https://github.com/diafygi/letsencrypt-nosudo#how-to-use-the-signing-script
+- name: create ACME directories
+  file:
+    group: nginx
+    owner: "{{ deploy_user }}"
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /home/{{ deploy_user }}/acme
+    - /usr/share/nginx/html/.well-known/acme-challenge
+
+- name: create TLS user private key
+  shell: openssl genrsa 4096 > /home/{{ deploy_user }}/acme/user.key
+  args:
+    creates: /home/{{ deploy_user }}/acme/user.key
+  become: true
+  become_user: "{{ deploy_user }}"
+
+- name: create TLS domain private key
+  shell: openssl genrsa 4096 > /etc/ssl/certs/{{ ansible_ssh_host }}.key
+  args:
+    creates: /etc/ssl/certs/{{ ansible_ssh_host }}.key
+
+- name: set permissions on TLS domain private key
+  file:
+    group: nginx
+    owner: "{{ deploy_user }}"
+    path: /etc/ssl/certs/{{ ansible_ssh_host }}.key
+
+- name: copy default OpenSSL config
+  copy:
+    dest: /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.cnf
+    group: nginx
+    owner: "{{ deploy_user }}"
+    remote_src: yes
+    src: /etc/pki/tls/openssl.cnf
+
+- name: add DNS info to local config
+  lineinfile:
+    dest: /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.cnf
+    line: "[SAN]\nsubjectAltName=DNS:{{ ansible_ssh_host }},DNS:www.{{ ansible_ssh_host }}"
+  become: true
+  become_user: "{{ deploy_user }}"
+
+- name: create Certificate Signing Request
+  shell: 'openssl req -new -sha256 -key /etc/ssl/certs/{{ ansible_ssh_host }}.key -subj "/" -reqexts SAN -config /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.cnf > /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.csr'
+  args:
+    creates: /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.csr
+  become: true
+  become_user: "{{ deploy_user }}"
+
+- name: check if /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt exists
+  stat:
+    path: /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt
+  register: certfile
+
+- name: get certificate from Let’s Encrypt
+  shell: python3 /home/{{ deploy_user }}/acme-tiny/acme_tiny.py \
+         --account-key /home/{{ deploy_user }}/acme/user.key \
+         --csr /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.csr \
+         --acme-dir /usr/share/nginx/html/.well-known/acme-challenge \
+         > /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt
+  when: certfile.stat.exists == False or certfile.stat.size == 0
+  become: true
+  become_user: "{{ deploy_user }}"
+
+# This is an intermediate certificate; it's not strictly required but
+# not having it will cap your Qualys ranking at B
+- name: download Let’s Encrypt X3 certificate
+  get_url:
+    url: https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem
+    checksum: sha256:{{ intermediate_sha }}
+    dest: /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem
+    owner: "{{ deploy_user }}"
+    group: nginx
+
+- name: combine certificates
+  shell: cat /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt \
+             /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem \
+         > /etc/ssl/certs/{{ ansible_ssh_host }}.pem
+  args:
+    creates: /etc/ssl/certs/{{ ansible_ssh_host }}.pem
+
+- name: set permissions on certificate
+  file:
+    path: /etc/ssl//certs/{{ ansible_ssh_host }}.pem
+    owner: "{{ deploy_user }}"
+    group: nginx
+
+- name: ensure /home/{{ deploy_user }}/bin exists
+  file:
+    state: directory
+    path: /home/{{ deploy_user }}/bin
+    owner: "{{ deploy_user }}"
+    group: nginx
+
+- name: install renew.sh script
+  template:
+    src: renew.sh.j2
+    dest: /home/{{ deploy_user }}/bin/renew.sh
+    owner: "{{ deploy_user }}"
+    group: nginx
+    mode: 0755
+
+- name: schedule certificate renewal
+  cron:
+    name: "ACME renewal"
+    special_time: monthly
+    job: /home/{{ deploy_user }}/bin/renew.sh \
+         2>> /var/log/acme_error.log
+    cron_file: acme_renewal
+    user: "{{ deploy_user }}"
+
+- name: make ACME log writeable by {{ deploy_user }}
+  file:
+    path: /var/log/acme_error.log
+    state: touch
+    owner: "{{ deploy_user }}"
+    group: nginx

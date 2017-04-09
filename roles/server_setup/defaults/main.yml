@@ -1,0 +1,8 @@
+---
+deploy_user: deploy
+
+app_dir: /var/www
+app_root: "{{ app_dir }}/current/public"
+startup_file: "{{ app_dir }}/current/config.ru"
+
+passenger_ver: 5.1.2

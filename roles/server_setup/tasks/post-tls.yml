@@ -1,0 +1,31 @@
+---
+- name: add full Nginx configuration
+  template:
+    src: app.conf.j2
+    dest: /etc/nginx/conf.d/app.conf
+    force: yes
+
+- name: ensure {{ app_dir }} exists
+  file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: "{{ deploy_user }}"
+    group: nginx
+
+- name: install passenger.conf
+  copy:
+    dest: /etc/nginx/conf.d/passenger.conf
+    src: passenger.conf
+
+- name: restart Nginx
+  systemd:
+    enabled: yes
+    name: nginx
+    state: restarted
+
+- name: schedule Nginx to restart after certificate renewal
+  cron:
+    job: "systemctl restart nginx"
+    name: restart Nginx
+    special_time: monthly
+    user: root
