@@ -24,9 +24,12 @@
     name: "{{ item }}"
   with_items:
     - binutils
+    # to compile unf_ext
+    - gcc-c++
     - git
     - nodejs
     - openssl-devel
+    # to compile pg extensions
     - postgresql-devel
     - redis
 
