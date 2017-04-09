@@ -21,12 +21,6 @@
     # for acme-tiny
     - python34-devel
 
-- name: install Passenger
-  gem:
-    name: passenger
-    user_install: no
-    version: "{{ passenger_ver }}"
-
 - name: remove app.conf
   file:
     path: /etc/nginx/conf.d/app.conf

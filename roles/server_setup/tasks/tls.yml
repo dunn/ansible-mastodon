@@ -72,7 +72,7 @@
 - name: download Let’s Encrypt X3 certificate
   get_url:
     url: https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem
-    checksum: sha256:{{ intermediate_sha }}
+    checksum: sha256:{{ intermediate_cert_sha }}
     dest: /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem
     owner: "{{ deploy_user }}"
     group: nginx

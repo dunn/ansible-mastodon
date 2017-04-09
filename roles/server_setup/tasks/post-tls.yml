@@ -1,12 +1,4 @@
 ---
-- name: get path to ruby executable
-  command: which ruby
-  register: ruby_path
-
-- name: get value of passenger_root
-  command: passenger-config --root
-  register: passenger_root
-
 - name: add full Nginx configuration
   template:
     src: app.conf.j2

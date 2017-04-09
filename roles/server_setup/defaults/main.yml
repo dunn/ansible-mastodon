@@ -1,8 +1,5 @@
 ---
-deploy_user: deploy
-
 app_dir: /var/www
 app_root: "{{ app_dir }}/current/public"
-startup_file: "{{ app_dir }}/current/config.ru"
-
-passenger_ver: 5.1.2
+deploy_user: deploy
+intermediate_cert_sha: e446c5e9dbef9d09ac9f7027c034602492437a05ff6c40011d7235fca639c79a
