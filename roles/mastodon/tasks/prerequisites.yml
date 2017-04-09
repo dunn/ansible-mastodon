@@ -23,6 +23,7 @@
   yum:
     name: "{{ item }}"
   with_items:
+    - ImageMagick
     - binutils
     - curl-devel
     # to compile unf_ext
