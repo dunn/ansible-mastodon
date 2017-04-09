@@ -1,12 +1,5 @@
 ---
-- name: get bundler path
-  command: which bundle
-  register: which_bundle
-
-- name: set bundler_path
-  set_fact:
-    bundler_path: "{{ which_bundle.stdout }}"
-
+- include: bundler.yml
 - include: prerequisites.yml
 - include: configuration.yml
 - include: services.yml
