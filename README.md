@@ -33,3 +33,11 @@ application to listen on ports 3000 and 4000:
 sudo semanage port -a -t http_port_t -p tcp 3000
 sudo semanage port -a -t http_port_t -p tcp 4000
 ```
+
+Depending on where the application is running from, you may also need
+to configure SELinux to allow NGINX to read thumbnails:
+
+```shell
+sudo semanage fcontext --add --type httpd_sys_content_t /var/www/shared/public
+sudo restorecon -R -v /var/www/shared/public
+```
