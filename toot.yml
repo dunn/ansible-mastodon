@@ -47,16 +47,20 @@
         db: "{{ pg_db }}"
 
     rbenv:
-      env: system
+      env: user
       version: v1.1.0
-      default_ruby: 2.3.1
+      default_ruby: 2.3.3
       rubies:
-        - version: 2.3.1
+        - version: 2.3.3
+          env:
+            RUBY_CONFIGURE_OPTS: "--enable-shared"
 
   roles:
     - role: dunn.tz
     - role: fixme_bzip2
     - role: zzet.rbenv
+      rbenv_users:
+        - "{{ deploy_user }}"
     - role: geerlingguy.postgresql
     - role: server_setup
     - role: app_setup

@@ -3,11 +3,14 @@
   gem:
     name: bundler
     state: latest
-    user_install: no
+  become: yes
+  become_user: "{{ deploy_user }}"
 
 - name: get bundler path
   command: which bundle
   register: which_bundle
+  become: yes
+  become_user: "{{ deploy_user }}"
 
 - name: set bundler_path
   set_fact:
