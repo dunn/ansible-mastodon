@@ -36,7 +36,10 @@
     owner: "{{ deploy_user }}"
     regexp: "{{ item.regexp }}"
   with_items:
-    - line: DB_host=localhost
+    - line: REDIS_HOST=localhost
+      regexp: "^REDIS_HOST=redis$"
+
+    - line: DB_HOST=localhost
       regexp: "^DB_HOST=db$"
 
     - line: DB_USER={{ pg_user }}
