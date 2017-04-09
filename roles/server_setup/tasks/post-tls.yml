@@ -1,4 +1,12 @@
 ---
+- name: get path to ruby executable
+  command: which ruby
+  register: ruby_path
+
+- name: get value of passenger_root
+  command: passenger-config --root
+  register: passenger_root
+
 - name: add full Nginx configuration
   template:
     src: app.conf.j2
@@ -11,11 +19,6 @@
     state: directory
     owner: "{{ deploy_user }}"
     group: nginx
-
-- name: install passenger.conf
-  copy:
-    dest: /etc/nginx/conf.d/passenger.conf
-    src: passenger.conf
 
 - name: restart Nginx
   systemd:

@@ -39,6 +39,8 @@ server {
     index index.html;
 
     passenger_enabled on;
+    passenger_root {{ passenger_root.stdout }};
+    passenger_ruby {{ ruby_path.stdout }}
     passenger_startup_file {{ startup_file }};
 
     ssl_protocols TLSv1.2;
