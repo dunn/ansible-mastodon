@@ -27,6 +27,9 @@
     # to compile unf_ext
     - gcc-c++
     - git
+    # to compile nokogiri extensions
+    - libxml2-devel
+    - libxslt-devel
     - nodejs
     - openssl-devel
     # to compile pg extensions
