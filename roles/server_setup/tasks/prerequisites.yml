@@ -18,6 +18,8 @@
     - git
     - nginx
     - openssl-devel
+    # for semanage
+    - policycoreutils-python
     # for acme-tiny
     - python34-devel
 
