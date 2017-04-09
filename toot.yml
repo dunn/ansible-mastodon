@@ -58,6 +58,7 @@
   roles:
     - role: dunn.tz
     - role: dunn.acme-nginx-passenger
+    - role: fixme_bzip2
     - role: zzet.rbenv
       rbenv_users:
         - "{{ deploy_user }}"
