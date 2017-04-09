@@ -14,9 +14,8 @@
 - name: start Mastodon services
   systemd:
     daemon_reload: true
-    enabled: true
+    enabled: yes
     name: "{{ item }}"
-    state: started
   with_items:
     - mastodon-sidekiq
     - mastodon-streaming
