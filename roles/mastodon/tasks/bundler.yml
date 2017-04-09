@@ -1,4 +1,5 @@
 ---
+# See https://github.com/zzet/ansible-rbenv-role/issues/12
 - name: install bundler
   gem:
     executable: /home/{{ deploy_user }}/.rbenv/shims/gem

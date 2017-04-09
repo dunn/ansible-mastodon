@@ -55,12 +55,11 @@
 
   roles:
     - role: dunn.tz
-    # creates  {{ deploy_user }}, run before rbenv
-    - role: server_setup
+    - role: nginx-deploy-user
     - role: fixme_bzip2
     - role: zzet.rbenv
       rbenv_users:
         - "{{ deploy_user }}"
     - role: geerlingguy.postgresql
-    - role: app_setup
+    - role: mastodon
     - role: dunn.security

@@ -1,6 +1,9 @@
 ---
-- include: users.yml
 - include: prerequisites.yml
+- include: bundler.yml
 - include: firewall.yml
 - include: tls.yml
 - include: post-tls.yml
+- include: configuration.yml
+- include: services.yml
+- include: jobs.yml

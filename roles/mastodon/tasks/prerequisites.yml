@@ -24,16 +24,22 @@
     name: "{{ item }}"
   with_items:
     - binutils
+    - curl-devel
     # to compile unf_ext
     - gcc-c++
     - git
     # to compile nokogiri extensions
     - libxml2-devel
     - libxslt-devel
+    - nginx
     - nodejs
     - openssl-devel
+    # for semanage
+    - policycoreutils-python
     # to compile pg extensions
     - postgresql-devel
+    # for acme-tiny
+    - python34-devel
     - redis
 
 - name:  start redis
