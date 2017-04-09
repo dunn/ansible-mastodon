@@ -24,9 +24,3 @@
     name: restart Nginx
     special_time: monthly
     user: root
-
-- name: make sure SELinux doesn\'t block Puma and Node
-  command: semanage port -a -t http_port_t -p tcp {{ item }}
-  with_items:
-    - 3000
-    - 4000
