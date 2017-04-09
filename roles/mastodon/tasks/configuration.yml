@@ -1,12 +1,12 @@
 ---
-- name: create shared directory
+- name: create shared directories
   file:
     group: nginx
     owner: "{{ deploy_user }}"
     path: "{{ item }}"
     state: directory
   with_items:
-    - "{{ app_dir }}/shared"
+    - "{{ app_dir }}/shared/log"
 
 - name: install config template
   get_url:
