@@ -55,6 +55,7 @@
 
   roles:
     - role: dunn.tz
+    # this user is used by the rbenv role below
     - role: nginx-deploy-user
     - role: fixme_bzip2
     - role: zzet.rbenv
