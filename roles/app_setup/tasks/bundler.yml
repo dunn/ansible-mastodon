@@ -1,17 +1,12 @@
 ---
 - name: install bundler
   gem:
+    executable: /home/{{ deploy_user }}/.rbenv/shims/gem
     name: bundler
     state: latest
   become: yes
   become_user: "{{ deploy_user }}"
 
-- name: get bundler path
-  command: which bundle
-  register: which_bundle
-  become: yes
-  become_user: "{{ deploy_user }}"
-
 - name: set bundler_path
   set_fact:
-    bundler_path: "{{ which_bundle.stdout }}"
+    bundler_path: /home/{{ deploy_user }}/.rbenv/shims/bundle
