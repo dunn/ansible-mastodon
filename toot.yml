@@ -46,6 +46,13 @@
       - name: "{{ pg_user }}"
         db: "{{ pg_db }}"
 
+    rbenv:
+      env: system
+      version: v1.1.0
+      default_ruby: 2.3.1
+      rubies:
+        - version: 2.3.1
+
   roles:
     - role: dunn.tz
     - role: fixme_bzip2
