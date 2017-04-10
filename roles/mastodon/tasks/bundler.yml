@@ -7,7 +7,3 @@
     state: latest
   become: yes
   become_user: "{{ deploy_user }}"
-
-- name: set bundler_path
-  set_fact:
-    bundler_path: /home/{{ deploy_user }}/.rbenv/shims/bundle

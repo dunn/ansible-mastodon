@@ -10,7 +10,7 @@ User=mastodon
 WorkingDirectory={{ app_dir }}/current
 Environment="RAILS_ENV=production"
 Environment="PORT=3000"
-ExecStart={{ bundler_path }} exec puma -C config/puma.rb
+ExecStart=/bin/bash -lc 'bundle exec puma -C config/puma.rb'
 TimeoutSec=15
 Restart=always
 
