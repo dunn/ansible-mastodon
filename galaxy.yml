@@ -11,5 +11,8 @@
 - src: geerlingguy.postgresql
   version: '1.0.2'
 
+- src: ucsdlib.ffmpeg
+  version: '1.2.1'
+
 - src: dunn.security
   version: '2'

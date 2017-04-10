@@ -63,5 +63,7 @@
       rbenv_users:
         - "{{ deploy_user }}"
     - role: geerlingguy.postgresql
+    - role: ucsdlib.ffmpeg
+      ffmpeg_install: "/usr/bin"
     - role: mastodon
     - role: dunn.security
