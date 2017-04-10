@@ -38,6 +38,6 @@ Depending on where the application is running from, you may also need
 to configure SELinux to allow NGINX to read thumbnails:
 
 ```shell
-sudo semanage fcontext --add --type httpd_sys_content_t /var/www/shared/public
-sudo restorecon -R -v /var/www/shared/public
+audit2allow -a –M mastodon # after an image read is blocked
+semodule -i mastodon.pp
 ```
