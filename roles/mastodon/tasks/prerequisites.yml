@@ -42,6 +42,7 @@
     # for acme-tiny
     - python34-devel
     - redis
+    - xz
 
 - name:  start redis
   systemd:

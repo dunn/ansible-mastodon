@@ -1,0 +1,14 @@
+---
+- name: create log directory
+  file:
+    group: nginx
+    owner: "{{ deploy_user }}"
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ app_dir }}/shared/log"
+
+- name: configure logrotate
+  template:
+    src: rails-logs.conf.j2
+    dest: /etc/logrotate.d/rails-logs.conf

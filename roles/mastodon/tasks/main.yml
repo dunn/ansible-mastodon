@@ -7,3 +7,4 @@
 - include: configuration.yml
 - include: services.yml
 - include: jobs.yml
+- include: logging.yml

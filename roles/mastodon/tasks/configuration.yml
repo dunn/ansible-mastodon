@@ -1,5 +1,5 @@
 ---
-- name: create shared directories
+- name: create shared directory
   file:
     group: nginx
     owner: "{{ deploy_user }}"
