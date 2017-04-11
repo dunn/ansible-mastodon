@@ -34,6 +34,10 @@ sudo semanage port -a -t http_port_t -p tcp 3000
 sudo semanage port -a -t http_port_t -p tcp 4000
 ```
 
+## Troubleshooting
+
+### SELinux
+
 Depending on where the application is running from, you may also need
 to configure SELinux to allow NGINX to read thumbnails:
 
@@ -41,3 +45,13 @@ to configure SELinux to allow NGINX to read thumbnails:
 audit2allow -a –M mastodon # after an image read is blocked
 semodule -i mastodon.pp
 ```
+
+### API Redirects
+
+Like me you might be used to
+[redirecting traffic from the naked domain to `www`](http://www.yes-www.org/why-use-www/).
+That won’t work here, since several of the API clients involved in
+federation do not follow redirects.  If you try to `301` all your
+traffic from <https://hello.cat> to <https://www.hello.cat>,
+federation will not work.  Nor will trying to log into a Mastodon
+client like Amaroq using `hello.cat` as the name of your instance.
