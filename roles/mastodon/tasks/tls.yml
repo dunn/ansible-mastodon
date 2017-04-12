@@ -2,9 +2,9 @@
 # https://letsencrypt.org/how-it-works/
 # https://github.com/diafygi/acme-tiny#how-to-use-this-script
 # https://github.com/diafygi/letsencrypt-nosudo#how-to-use-the-signing-script
-- name: remove app.conf
+- name: remove mastodon.conf
   file:
-    path: /etc/nginx/conf.d/app.conf
+    path: /etc/nginx/conf.d/mastodon.conf
     state: absent
 
 - name: start Nginx

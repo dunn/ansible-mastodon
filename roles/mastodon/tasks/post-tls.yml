@@ -1,8 +1,8 @@
 ---
 - name: add full Nginx configuration
   template:
-    src: app.conf.j2
-    dest: /etc/nginx/conf.d/app.conf
+    src: mastodon.conf.j2
+    dest: /etc/nginx/conf.d/mastodon.conf
     force: yes
 
 - name: ensure {{ app_dir }} exists
