@@ -92,14 +92,6 @@
                    --acme-dir /usr/share/nginx/html/.well-known/acme-challenge
   register: cert
 
-- name: write TLS certificate
-  copy:
-    content: "{{ cert.stdout }}"
-    dest: /home/{{ deploy_user }}/acme/acme.crt
-    force: yes
-    group: "{{ deploy_group }}"
-    owner: "{{ deploy_user }}"
-
 # This is an intermediate certificate; it's not strictly required but
 # not having it will cap your Qualys ranking at B
 - name: download Let’s Encrypt X3 certificate
@@ -110,14 +102,14 @@
     owner: "{{ deploy_user }}"
     group: "{{ deploy_group }}"
 
-- name: combine domain and intermediate certificates
-  command: cat /home/{{ deploy_user }}/acme/acme.crt \
-               /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem \
-  register: combined_cert
+- name: read intermediate certificate
+  slurp:
+    src: /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem
+  register: intermediate
 
 - name: write combined cert
   copy:
-    content: "{{ combined_cert.stdout }}"
+    content: "{{ cert.stdout }}\n{{ intermediate['content'] | b64decode }}"
     dest: /etc/ssl/certs/acme.pem
     force: yes
     group: "{{ deploy_group }}"
