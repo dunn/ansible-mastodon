@@ -1,5 +1,5 @@
 ---
-- name: create shared directory
+- name: create shared directories
   file:
     group: "{{ deploy_group }}"
     owner: "{{ deploy_user }}"
@@ -7,6 +7,14 @@
     state: directory
   with_items:
     - "{{ app_dir }}/shared/log"
+    - "{{ app_dir }}/shared/public"
+
+- name: install robots.txt
+  copy:
+    dest: "{{ app_dir }}/shared/public/robots.txt"
+    group: "{{ deploy_group }}"
+    owner: "{{ deploy_user }}"
+    src: robots.txt
 
 - name: install config template
   get_url:
