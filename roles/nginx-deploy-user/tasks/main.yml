@@ -1,12 +1,12 @@
 ---
-- name: create nginx group
+- name: create “{{ deploy_group }}” group
   group:
-    name: nginx
+    name: "{{ deploy_group }}"
 
 - name: create “{{ deploy_user }}” user
   user:
     generate_ssh_key: yes
-    groups: nginx,wheel
+    groups: "{{ deploy_group }},wheel"
     home: /home/{{ deploy_user }}
     name: "{{ deploy_user }}"
     password: "{{ deploy_pass }}"

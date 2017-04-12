@@ -1,7 +1,7 @@
 ---
 - name: create shared directory
   file:
-    group: nginx
+    group: "{{ deploy_group }}"
     owner: "{{ deploy_user }}"
     path: "{{ item }}"
     state: directory
@@ -12,7 +12,7 @@
   get_url:
     url: https://github.com/tootsuite/mastodon/raw/master/.env.production.sample
     dest: "{{ app_dir }}/shared/.env.production"
-    group: nginx
+    group: "{{ deploy_group }}"
     owner: "{{ deploy_user }}"
 
 - name: generate Rails secret key base
@@ -30,7 +30,7 @@
 - name: fill in configuration variables
   lineinfile:
     dest: "{{ app_dir }}/shared/.env.production"
-    group: nginx
+    group: "{{ deploy_group }}"
     line: "{{ item.line }}"
     mode: 0600
     owner: "{{ deploy_user }}"

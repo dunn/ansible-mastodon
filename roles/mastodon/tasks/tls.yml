@@ -23,7 +23,7 @@
 
 - name: create ACME directories
   file:
-    group: nginx
+    group: "{{ deploy_group }}"
     owner: "{{ deploy_user }}"
     path: "{{ item }}"
     state: directory
@@ -45,14 +45,14 @@
 
 - name: set permissions on TLS domain private key
   file:
-    group: nginx
+    group: "{{ deploy_group }}"
     owner: "{{ deploy_user }}"
     path: /etc/ssl/certs/{{ ansible_ssh_host }}.key
 
 - name: copy default OpenSSL config
   copy:
     dest: /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.cnf
-    group: nginx
+    group: "{{ deploy_group }}"
     owner: "{{ deploy_user }}"
     remote_src: yes
     src: /etc/pki/tls/openssl.cnf
@@ -94,7 +94,7 @@
     checksum: sha256:{{ intermediate_cert_sha }}
     dest: /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem
     owner: "{{ deploy_user }}"
-    group: nginx
+    group: "{{ deploy_group }}"
 
 - name: combine certificates
   shell: cat /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt \
@@ -107,21 +107,21 @@
   file:
     path: /etc/ssl//certs/{{ ansible_ssh_host }}.pem
     owner: "{{ deploy_user }}"
-    group: nginx
+    group: "{{ deploy_group }}"
 
 - name: ensure /home/{{ deploy_user }}/bin exists
   file:
     state: directory
     path: /home/{{ deploy_user }}/bin
     owner: "{{ deploy_user }}"
-    group: nginx
+    group: "{{ deploy_group }}"
 
 - name: install renew.sh script
   template:
     src: renew.sh.j2
     dest: /home/{{ deploy_user }}/bin/renew.sh
     owner: "{{ deploy_user }}"
-    group: nginx
+    group: "{{ deploy_group }}"
     mode: 0755
 
 - name: schedule certificate renewal
@@ -138,4 +138,4 @@
     path: /var/log/acme_error.log
     state: touch
     owner: "{{ deploy_user }}"
-    group: nginx
+    group: "{{ deploy_group }}"

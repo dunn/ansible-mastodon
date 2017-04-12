@@ -1,0 +1,3 @@
+---
+deploy_user: mastodon
+deploy_group: nginx

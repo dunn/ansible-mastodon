@@ -10,7 +10,7 @@
     path: "{{ app_dir }}"
     state: directory
     owner: "{{ deploy_user }}"
-    group: nginx
+    group: "{{ deploy_group }}"
 
 - name: restart Nginx
   systemd:
