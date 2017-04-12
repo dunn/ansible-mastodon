@@ -66,7 +66,7 @@
 - name: add DNS info to local config
   lineinfile:
     dest: /home/{{ deploy_user }}/acme/acme.cnf
-    line: "[SAN]\nsubjectAltName=DNS:{{ ansible_ssh_host }},DNS:www.{{ ansible_ssh_host }}"
+    line: "[SAN]\nsubjectAltName=DNS:{{ ansible_ssh_host }}"
   become: true
   become_user: "{{ deploy_user }}"
 

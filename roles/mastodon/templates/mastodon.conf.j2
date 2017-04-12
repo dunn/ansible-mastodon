@@ -16,7 +16,7 @@ server {
     # for the reverse proxying
     listen 127.0.0.1;
     listen 443 ssl http2;
-    server_name {{ ansible_ssh_host }} www.{{ ansible_ssh_host }};
+    server_name {{ ansible_ssh_host }}
 
     # Your favorite resolver may be used instead of the Google one below
     resolver 8.8.8.8;
