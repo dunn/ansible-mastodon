@@ -31,23 +31,29 @@
     - /home/{{ deploy_user }}/acme
     - /usr/share/nginx/html/.well-known/acme-challenge
 
-- name: create TLS user private key
-  shell: openssl genrsa 4096 > /home/{{ deploy_user }}/acme/user.key
-  args:
-    creates: /home/{{ deploy_user }}/acme/user.key
-  become: true
-  become_user: "{{ deploy_user }}"
+- name: generate TLS user private key
+  command: openssl genrsa 4096
+  register: tls_user
 
-- name: create TLS domain private key
-  shell: openssl genrsa 4096 > /etc/ssl/certs/{{ ansible_ssh_host }}.key
-  args:
-    creates: /etc/ssl/certs/{{ ansible_ssh_host }}.key
-
-- name: set permissions on TLS domain private key
-  file:
+- name: write TLS user private key
+  copy:
+    content: "{{ tls_user.stdout }}"
+    dest: /home/{{ deploy_user }}/acme/user.key
+    force: yes
     group: "{{ deploy_group }}"
     owner: "{{ deploy_user }}"
-    path: /etc/ssl/certs/{{ ansible_ssh_host }}.key
+
+- name: generate TLS domain private key
+  command: openssl genrsa 4096
+  register: tls_domain
+
+- name: write TLS domain private key
+  copy:
+    content: "{{ tls_domain.stdout }}"
+    dest: /etc/ssl/certs/{{ ansible_ssh_host }}.key
+    force: yes
+    group: "{{ deploy_group }}"
+    owner: "{{ deploy_user }}"
 
 - name: copy default OpenSSL config
   copy:
@@ -64,27 +70,35 @@
   become: true
   become_user: "{{ deploy_user }}"
 
-- name: create Certificate Signing Request
-  shell: 'openssl req -new -sha256 -key /etc/ssl/certs/{{ ansible_ssh_host }}.key -subj "/" -reqexts SAN -config /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.cnf > /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.csr'
-  args:
-    creates: /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.csr
-  become: true
-  become_user: "{{ deploy_user }}"
+- name: generate Certificate Signing Request
+  command: openssl req -new -sha256 \
+                       -key /etc/ssl/certs/{{ ansible_ssh_host }}.key \
+                       -subj "/" -reqexts SAN \
+                       -config /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.cnf
+  register: csr
 
-- name: check if /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt exists
-  stat:
-    path: /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt
-  register: certfile
+- name: write Certificate Signing Request
+  copy:
+    content: "{{ csr.stdout }}"
+    dest: /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.csr
+    force: yes
+    group: "{{ deploy_group }}"
+    owner: "{{ deploy_user }}"
 
-- name: get certificate from Let’s Encrypt
-  shell: python3 /home/{{ deploy_user }}/acme-tiny/acme_tiny.py \
-         --account-key /home/{{ deploy_user }}/acme/user.key \
-         --csr /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.csr \
-         --acme-dir /usr/share/nginx/html/.well-known/acme-challenge \
-         > /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt
-  when: certfile.stat.exists == False or certfile.stat.size == 0
-  become: true
-  become_user: "{{ deploy_user }}"
+- name: generate TLS certificate
+  command: python3 /home/{{ deploy_user }}/acme-tiny/acme_tiny.py \
+                   --account-key /home/{{ deploy_user }}/acme/user.key \
+                   --csr /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.csr \
+                   --acme-dir /usr/share/nginx/html/.well-known/acme-challenge
+  register: cert
+
+- name: write TLS certificate
+  copy:
+    content: "{{ cert.stdout }}"
+    dest: /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt
+    force: yes
+    group: "{{ deploy_group }}"
+    owner: "{{ deploy_user }}"
 
 # This is an intermediate certificate; it's not strictly required but
 # not having it will cap your Qualys ranking at B
@@ -96,18 +110,18 @@
     owner: "{{ deploy_user }}"
     group: "{{ deploy_group }}"
 
-- name: combine certificates
-  shell: cat /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt \
-             /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem \
-         > /etc/ssl/certs/{{ ansible_ssh_host }}.pem
-  args:
-    creates: /etc/ssl/certs/{{ ansible_ssh_host }}.pem
+- name: combine domain and intermediate certificates
+  command: cat /home/{{ deploy_user }}/acme/{{ ansible_ssh_host }}.crt \
+               /etc/ssl/certs/lets-encrypt-x3-cross-signed.pem \
+  register: combined_cert
 
-- name: set permissions on certificate
-  file:
-    path: /etc/ssl//certs/{{ ansible_ssh_host }}.pem
-    owner: "{{ deploy_user }}"
+- name: write combined cert
+  copy:
+    content: "{{ combined_cert.stdout }}"
+    dest: /etc/ssl/certs/{{ ansible_ssh_host }}.pem
+    force: yes
     group: "{{ deploy_group }}"
+    owner: "{{ deploy_user }}"
 
 - name: ensure /home/{{ deploy_user }}/bin exists
   file:
