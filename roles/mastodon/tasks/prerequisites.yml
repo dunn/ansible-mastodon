@@ -29,6 +29,7 @@
     # to compile unf_ext
     - gcc-c++
     - git
+    - htop
     # to compile nokogiri extensions
     - libxml2-devel
     - libxslt-devel
@@ -40,6 +41,7 @@
     # for acme-tiny
     - python34-devel
     - redis
+    - tree
     - xz
 
 - name:  start redis
