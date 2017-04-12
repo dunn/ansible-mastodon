@@ -35,8 +35,6 @@
     - nginx
     - nodejs
     - openssl-devel
-    # for semanage
-    - policycoreutils-python
     # to compile pg extensions
     - postgresql-devel
     # for acme-tiny

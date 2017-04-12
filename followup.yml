@@ -1,0 +1,7 @@
+---
+- name: Tidy up Mastodon
+  remote_user: mastodon
+  hosts: all
+
+  roles:
+    - role: post-deploy

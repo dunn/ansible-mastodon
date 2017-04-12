@@ -1,0 +1,29 @@
+---
+- name: update all yum packages
+  yum:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: install semanage
+  yum:
+    name: "{{ item }}"
+  with_items:
+    - libsemanage
+    - policycoreutils-python
+
+- name: allow Puma and Node to listen on nonstandard ports
+  command: semanage port -a -t http_port_t -p tcp {{ item }}
+  with_items:
+    - 3000
+    - 4000
+
+- name: copy SELinux policy to allow Nginx to read tmpfiles
+  copy:
+    dest: /tmp/mastodon-tmpfiles.pp
+    owner: root
+    group: root
+    src: mastodon-tmpfiles.pp
+
+- name: install SELinux policy to allow Nginx to read tmpfiles
+  command: semodule -i /tmp/mastodon-tmpfiles.pp

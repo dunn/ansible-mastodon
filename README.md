@@ -14,7 +14,7 @@ Let’s Encrypt certificate for the domain.
 
 Edit `inventory` and set `ansible_ssh_host` to your domain.
 
-```
+```shell
 ansible-galaxy install --roles-path roles -r galaxy.yml
 ansible-playbook -i inventory toot.yml
 ```
@@ -26,25 +26,16 @@ ansible-playbook -i inventory toot.yml
 
 - You’ll be prompted for SMTP settings; the defaults are for SparkPost.
 
-After reboot, when SELinux is enabled, you’ll need to allow the
-application to listen on ports 3000 and 4000:
+After it finishes you can deploy using Capistrano.
+
+After reboot, when SELinux is enabled, you’ll need to run the
+`post-deploy.yml` playbook to configure SELinux correctly:
 
 ```shell
-sudo semanage port -a -t http_port_t -p tcp 3000
-sudo semanage port -a -t http_port_t -p tcp 4000
+ansible-playbook -i inventory followup.yml -b -K
 ```
 
 ## Troubleshooting
-
-### SELinux
-
-Depending on where the application is running from, you may also need
-to configure SELinux to allow NGINX to read thumbnails:
-
-```shell
-audit2allow -a –M mastodon # after an image read is blocked
-semodule -i mastodon.pp
-```
 
 ### API Redirects
 
