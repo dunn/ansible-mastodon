@@ -53,6 +53,9 @@
     - line: DB_USER={{ pg_user }}
       regexp: "^DB_USER=postgres$"
 
+    - line: DB_NAME={{ pg_db }}
+      regexp: "^DB_NAME=postgres$"
+
     - line: LOCAL_DOMAIN={{ ansible_ssh_host }}
       regexp: "^LOCAL_DOMAIN=example.com$"
 
