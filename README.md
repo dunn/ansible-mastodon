@@ -6,6 +6,8 @@ Playbook to set up Mastodon on RHEL/CentOS.
 
 - Ansible 2.2 or higher
 
+- SELinux (i.e., **not** a Linode or Vultr VM)
+
 This playbook assumes you already have a server (that you can SSH into
 as root) and a domain name pointing at it, and that you want a new
 Let’s Encrypt certificate for the domain.
