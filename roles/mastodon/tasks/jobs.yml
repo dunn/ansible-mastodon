@@ -7,11 +7,5 @@
     special_time: daily
     user: "{{ deploy_user }}"
   with_items:
-    - name: "media:clear"
-      job: "RAILS_ENV=production /bin/bash -lc 'bundle exec rake mastodon:media:clear'"
-
-    - name: "push:refresh"
-      job: "RAILS_ENV=production /bin/bash -lc 'bundle exec rake mastodon:push:refresh'"
-
-    - name: "feeds:clear"
-      job: "RAILS_ENV=production /bin/bash -lc 'bundle exec rake mastodon:feeds:clear'"
+    - name: "mastodon:daily"
+      job: "RAILS_ENV=production /bin/bash -lc 'cd {{ app_dir }}/current && bundle exec rake mastodon:daily'"
