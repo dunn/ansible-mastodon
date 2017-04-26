@@ -17,7 +17,7 @@ Let’s Encrypt certificate for the domain.
 Edit `inventory` and set `ansible_ssh_host` to your domain.
 
 ```shell
-ansible-galaxy install --roles-path roles -r galaxy.yml
+ansible-galaxy install --roles-path roles -r roles/requirements.yml
 ansible-playbook -i inventory toot.yml
 ```
 
