@@ -6,4 +6,3 @@
 - include: post-tls.yml
 - include: configuration.yml
 - include: services.yml
-- include: jobs.yml
