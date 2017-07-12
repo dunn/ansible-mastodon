@@ -134,8 +134,7 @@
   cron:
     name: "ACME renewal"
     special_time: monthly
-    job: /home/{{ deploy_user }}/bin/renew.sh \
-         2>> /var/log/acme_error.log
+    job: /home/{{ deploy_user }}/bin/renew.sh 2>> /var/log/acme_error.log
     cron_file: acme_renewal
     user: "{{ deploy_user }}"
 
