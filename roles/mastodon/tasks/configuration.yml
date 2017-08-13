@@ -35,6 +35,14 @@
   shell: openssl rand -base64 64 | sha512sum | tr -d '\n\ -'
   register: otp_secret
 
+- name: generate Vapid private key
+  shell: openssl rand -base64 64 | sha512sum | tr -d '\n\ -'
+  register: vapid_private
+
+- name: generate Vapid public key
+  shell: openssl rand -base64 64 | sha512sum | tr -d '\n\ -'
+  register: vapid_public
+
 - name: fill in configuration variables
   lineinfile:
     dest: "{{ app_dir }}/shared/.env.production"
@@ -79,3 +87,9 @@
 
     - line: OTP_SECRET={{ otp_secret.stdout }}
       regexp: "^OTP_SECRET=$"
+
+    - line: VAPID_PRIVATE_KEY={{ vapid_private.stdout }}
+      regexp: "^VAPID_PRIVATE_KEY=$"
+
+    - line: VAPID_PUBLIC_KEY={{ vapid_public.stdout }}
+      regexp: "^VAPID_PUBLIC_KEY=$"
