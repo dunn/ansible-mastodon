@@ -29,6 +29,8 @@
     - gcc-c++
     - git
     - htop
+    - libicu-devel
+    - libidn-devel
     - libxml2-devel
     - libxslt-devel
     - nginx
