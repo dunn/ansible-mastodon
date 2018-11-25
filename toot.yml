@@ -49,10 +49,9 @@
     rbenv:
       env: user
       version: v1.1.0
-      default_ruby: 2.4.1
+      default_ruby: 2.5.3
       rubies:
-        - version: 2.3.3
-        - version: 2.4.1
+        - version: 2.5.3
 
   roles:
     - role: dunn.tz
