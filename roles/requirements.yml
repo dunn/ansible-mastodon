@@ -9,7 +9,7 @@
   version: '3.4.0'
 
 - src: geerlingguy.postgresql
-  version: '1.0.2'
+  version: '1.4.3'
 
 - src: ucsdlib.ffmpeg
   version: '1.2.1'
